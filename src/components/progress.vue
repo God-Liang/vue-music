@@ -1,0 +1,75 @@
+<template>
+  <div class="progress" @click="setProClick($event)">
+    <div class="pro-line" :style="{ width: proLine + 'px' }"></div>
+    <div class="pro-loading" v-if="loading" :style="{ transform: 'translateX(' + proLoad + 'px)' }" ref="load"></div>
+    <div class="pro-load" v-else :style="{ transform: 'translateX(' + proLoad + 'px)' }"></div>
+  </div>
+</template>
+<script>
+export default {
+  name: 'Progress',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      proLine: 0,
+      proLoad: 0,
+      width: 0,
+      offsetLeft: 0,
+      scale: 0
+    }
+  },
+  mounted() {},
+  methods: {
+    setProClick(e) {
+      this.setPro(e.clientX - this.$el.offsetLeft)
+      this.scale = (this.proLine / this.$el.offsetWidth).toFixed(2)
+      console.log('--------scale:', this.scale)
+      this.$emit('childclick', this.scale)
+    },
+    setProgress(scale) {
+      this.proLine = scale * this.$el.offsetWidth
+      this.proLoad = scale * this.$el.offsetWidth
+    },
+    setPro(changeX) {
+      this.proLine = changeX
+      this.proLoad = changeX
+    }
+  }
+}
+</script>
+<style scoped>
+.progress {
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  cursor: pointer;
+  background: #454546;
+  position: relative;
+}
+.progress .pro-line {
+  width: 50px;
+  height: 100%;
+  background: #b82525;
+}
+.progress .pro-load {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  transform: translateX(50px);
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+}
+.mess {
+  height: 10px;
+  background: #fff;
+  margin-top: -60px;
+}
+</style>
